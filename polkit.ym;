@@ -1,0 +1,17 @@
+---
+- hosts:all
+  tasks:
+  - name:
+    shell: rpm -qa | grep polkit-0 | awk '{print "{{ ansible_host }}," $1 }' > /tmp/polkit-log.csv
+	ignore_errors: yes
+  - name:
+    fetch:
+	  src: /tmp/polkit-log.csv
+	  dest: /tmp/polkit-log
+	  
+- hosts: localhost
+  tasks:
+  - name:
+    shell: echo ip,polkit > /tmp/polkit-log.csv
+  - name:
+    shell: cat /tmp/polkit-log/*/tmp/polkit-log.csv >> /tmp/polkit-log.csv
